@@ -17,7 +17,7 @@
       </v-navigation-drawer>
       <v-toolbar color="deep-orange" dark fixed app>
         <v-toolbar-side-icon @click.stop="tocDrawer = !tocDrawer"></v-toolbar-side-icon>
-        <v-toolbar-title>贝叶斯反应适应性随机化</v-toolbar-title>
+        <v-toolbar-title>Bayesian Adaptive Randomisation</v-toolbar-title>
       </v-toolbar>
       <v-content app>
         <v-container fluid fill-height>
@@ -31,7 +31,7 @@
       <v-footer color="deep-orange" dark app>
         <v-layout justify-center row>
           <v-flex primary text-xs-center xs12 class="white--text">
-              <strong>东南大学公共卫生学院</strong>
+              <strong>@YangFan, Southeast University</strong>
           </v-flex>
         </v-layout>
       </v-footer>
@@ -44,31 +44,31 @@
     data: () => ({
       tocDrawer: null,
       toc: [
-        {
-          icon: 'arrow_forward',
-          path: 'home',
-          name: '首页',
-        },
+        // {
+        //   icon: 'arrow_forward',
+        //   path: 'home',
+        //   name: '首页',
+        // },
         {
           icon: 'arrow_forward',
           path: 'page1',
-          name: '研究背景与研究目的',
+          name: 'BRAR-BIN-Design',
         },
         {
           icon: 'arrow_forward',
           path: 'page2',
-          name: '研究内容与研究方法',
+          name: 'BRAR-BIN-Apply',
         },
-        {
-          icon: 'arrow_forward',
-          path: 'page3',
-          name: '案例简介',
-        },
-        {
-          icon: 'arrow_forward',
-          path: 'page4',
-          name: '中期考核要求',
-        },
+        // {
+        //   icon: 'arrow_forward',
+        //   path: 'page3',
+        //   name: '案例简介',
+        // },
+        // {
+        //   icon: 'arrow_forward',
+        //   path: 'page4',
+        //   name: '中期考核要求',
+        // },
         // {
         //   icon: '',
         //   path: '',
