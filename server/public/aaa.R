@@ -350,4 +350,6 @@ sd(sample_size_vector)
 sd((arm2_positive_number_vector + arm2_negative_number_vector)/(arm1_positive_number_vector + arm1_negative_number_vector))
 sd(arm1_negative_number_vector + arm2_negative_number_vector)
 
+# test
+allocation_probability_vector_list
 

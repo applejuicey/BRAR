@@ -1,0 +1,13 @@
+{
+  "type1": {
+    "instruction": "please fill in the parameters of the scheme on this page",
+    "title": "Three-arm Trial with Binary Endpoint (Moving Reference)",
+    "section1Title": "1. Prior Details",
+    "section1Instruction": "please specify the priors in this section",
+    "section2Title": "2. Algorithm Details",
+    "section3Title": "3. Simulation Details",
+    "simulate": "Simulate",
+    "toggleLanguage": "Toggle Language",
+    "loadExample": "Load Example"
+  }
+}

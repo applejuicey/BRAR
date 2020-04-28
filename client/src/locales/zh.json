@@ -1,0 +1,13 @@
+{
+  "type1": {
+    "instruction": "请在该页面内填写随机化方案的各个参数",
+    "title": "二分类结局的三臂试验（移动参照法）",
+    "section1Title": "1. 先验分布参数设定",
+    "section1Instruction": "请在下方设定各处理组未知参数的先验分布",
+    "section2Title": "2. 分配概率算法参数设定",
+    "section3Title": "3. 模拟参数设定",
+    "simulate": "开始模拟",
+    "toggleLanguage": "切换语言",
+    "loadExample": "加载示例"
+  }
+}

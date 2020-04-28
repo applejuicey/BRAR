@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Homepage from './views/Homepage.vue'
+import Type1 from './views/Type1.vue'
 import Home from './views/Home.vue'
 import Page1 from './views/Page1.vue'
 import Page2 from './views/Page2.vue'
@@ -12,6 +14,16 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '/home',
+      name: 'homepage',
+      component: Homepage
+    },
+    {
+      path: '/type1',
+      name: 'type1',
+      component: Type1
+    },
     {
       path: '/',
       name: 'home',
