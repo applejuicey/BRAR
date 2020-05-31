@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var child_process = require('child_process');
-var exec = child_process.exec;
-const path = require("path");
+let express = require('express');
+let router = express.Router();
+let child_process = require('child_process');
+let exec = child_process.exec;
+let path = require("path");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
