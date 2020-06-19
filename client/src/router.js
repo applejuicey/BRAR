@@ -5,7 +5,14 @@ Vue.use(Router);
 
 export default new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: '/brar/',
+  scrollBehavior: function (to, from, savedPosition) {
+    if (to.name === from.name) {
+
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
   routes: [
     {
       path: '/',
@@ -18,9 +25,14 @@ export default new Router({
       component: () => import('./views/Scheme/Type1.vue')
     },
     {
-      path: '/trials',
-      name: 'trials',
-      component: () => import('./views/Trial/Trials.vue')
+      path: '/custom',
+      name: 'custom',
+      component: () => import('./views/Scheme/Custom.vue')
+    },
+    {
+      path: '/schemes',
+      name: 'schemes',
+      component: () => import('./views/Scheme/Schemes.vue')
     },
     {
       path: '/subjects',

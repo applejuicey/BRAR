@@ -3,7 +3,7 @@
 
     <section id="subjects" class="py-5 max-height row align-items-center">
       <div class="overlay subjects-overlay"></div>
-      <div class="container" style="width: 80vw">
+      <div class="container">
 
         <div class="row">
           <div class="col-12">
@@ -20,6 +20,8 @@
                 <th scope="col">{{ $t('subjects.subjectScreeningID') }}</th>
                 <th scope="col">{{ $t('subjects.subjectID') }}</th>
                 <th scope="col">{{ $t('subjects.subjectDrugID') }}</th>
+                <th scope="col">{{ $t('subjects.subjectSpareDrugID') }}</th>
+                <th scope="col">{{ $t('subjects.subjectGroup') }}</th>
                 <th scope="col">{{ $t('subjects.subjectInitials') }}</th>
                 <th scope="col">{{ $t('subjects.subjectGender') }}</th>
                 <th scope="col">{{ $t('subjects.subjectEnterDate') }}</th>
@@ -36,6 +38,8 @@
                   <td>{{ subject.subjectScreeningID }}</td>
                   <td>{{ subject.subjectID }}</td>
                   <td>{{ subject.subjectDrugID }}</td>
+                  <td>{{ subject.subjectSpareDrugID }}</td>
+                  <td>{{ subject.subjectGroup }}</td>
                   <td>{{ subject.subjectInitials }}</td>
                   <td>
                     <i class="fas fa-male text-primary" v-if="subject.subjectGender === 'male'"></i>
@@ -55,30 +59,30 @@
                   <td>{{ processRandomisationStatus(subject.subjectRandomisationStatus) }}</td>
                   <td>{{ processResponse(subject.subjectResponse) }}</td>
                   <td class="text-right">
-                    <span class="cursor-pointer" @click=""
+                    <span class="cursor-pointer" @click="includeSubject(subject.subjectScreeningID)"
                           v-if="subject.subjectRandomisationStatus === 'screen'">
                        <i class="far fa-check-circle text-success"></i>&nbsp;
                     </span>
-                    <span class="cursor-pointer" @click=""
+                    <span class="cursor-pointer" @click="excludeSubject(subject.subjectScreeningID)"
                           v-if="subject.subjectRandomisationStatus === 'screen'">
                       <i class="far fa-times-circle text-warning"></i>&nbsp;
                     </span>
-                    <span class="cursor-pointer" @click=""
+                    <span class="cursor-pointer" @click="getDrugID(subject.subjectScreeningID)"
                           v-if="subject.subjectRandomisationStatus === 'include'">
                       <i class="fas fa-capsules text-success"></i>&nbsp;
                     </span>
-                    <span class="cursor-pointer" @click=""
+                    <span class="cursor-pointer" @click="getSpareDrugID(subject.subjectScreeningID)"
                           v-if="subject.subjectRandomisationStatus === 'allocated'">
                       <i class="fas fa-truck text-warning"></i>&nbsp;
                     </span>
-                    <span class="cursor-pointer" @click=""
+                    <span class="cursor-pointer" @click="unmaskSubject(subject.subjectScreeningID)"
                           v-if="subject.subjectRandomisationStatus === 'allocated' || subject.subjectRandomisationStatus === 'spare'">
                       <i class="far fa-eye text-danger"></i>&nbsp;
                     </span>
-                    <span class="cursor-pointer">
+                    <span class="cursor-pointer" @click="editSubject(subject.subjectScreeningID)">
                       <i class="far fa-edit text-primary"></i>&nbsp;
                     </span>
-                    <span class="cursor-pointer">
+                    <span class="cursor-pointer" @click="deleteSubject(subject.subjectScreeningID)">
                       <i class="far fa-trash-alt text-danger"></i>&nbsp;
                     </span>
                   </td>
@@ -107,11 +111,75 @@
       </div>
     </section>
 
+    <modal :modalID="modalID" :modalTitle="modalTitle" :modalType="modalType"
+           :modalConfirmButtonClass="modalConfirmButtonClass" @modalConfirmation="processModalConfirmation"
+           :customParameters="customParameters">
+      <template v-slot:modalBody v-if="['include', 'exclude', 'getDrugID', 'getSpareDrugID', 'unmaskSubject', 'delete'].includes(modalType)">
+        <span>
+          {{ modalMessage }}
+        </span>
+      </template>
+      <template v-slot:modalBody v-else-if="['create'].includes(modalType)">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 form-group">
+              <label for="subjectInitials">
+                {{ $t('subjects.subjectInitials') }}&nbsp;
+                <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('subjects.subjectInitialsInstruction')"></i>
+              </label>
+              <input type="text" class="form-control form-control-lg" v-model="subjectInitials" :placeholder="$t('subjects.subjectInitials')"
+                     id="subjectInitials" required>
+            </div>
+            <div class="col-12 form-group">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="subjectGender1" value="male" v-model="subjectGender">
+                <label class="form-check-label" for="subjectGender1">
+                  {{ $t('subjects.subjectGender1') }}&nbsp;
+                  <i class="fas fa-male text-primary"></i>
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="subjectGender2" value="female" v-model="subjectGender">
+                <label class="form-check-label" for="subjectGender2">
+                  {{ $t('subjects.subjectGender2') }}&nbsp;
+                  <i class="fas fa-female text-danger"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-slot:modalBody v-else-if="['edit'].includes(modalType)">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 form-group">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="subjectResponse0" value="0" v-model="subjectResponse">
+                <label class="form-check-label" for="subjectResponse0">
+                  {{ $t('subjects.subjectResponse0') }}
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="subjectResponse1" value="1" v-model="subjectResponse">
+                <label class="form-check-label" for="subjectResponse1">
+                  {{ $t('subjects.subjectResponse1') }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </modal>
+
   </div>
 </template>
 
 <script>
+  import Modal from '@/components/Modal.vue';
   export default {
+    components: {
+      Modal
+    },
     data: () => ({
       subjectList: [],
       randomisationStatusMap: new Map()
@@ -120,10 +188,19 @@
           .set('exclude', 'Excluded')
           .set('allocated', 'Allocated')
           .set('unmasked', 'Unmasked')
-          .set('spare', 'Spare Medicine Used'),
+          .set('spare', 'Spare Drug Used'),
       responseMap: new Map()
           .set('1', 'Yes')
           .set('0', 'No'),
+      subjectInitials: null,
+      subjectGender: null,
+      subjectResponse: null,
+      modalID: null,
+      modalTitle: null,
+      modalType: null,
+      modalConfirmButtonClass: null,
+      customParameters: null,
+      modalMessage: null,
     }),
     mounted: function () {
       this.subjectList = [
@@ -131,6 +208,8 @@
           subjectID: "",
           subjectScreeningID: "1",
           subjectDrugID: "",
+          subjectSpareDrugID: "",
+          subjectGroup: "",
           subjectInitials: "FHX",
           subjectGender: "male",
           subjectEnterDate: "2020-10-10",
@@ -143,6 +222,8 @@
           subjectID: "",
           subjectScreeningID: "2",
           subjectDrugID: "",
+          subjectSpareDrugID: "",
+          subjectGroup: "",
           subjectInitials: "JFDC",
           subjectGender: "male",
           subjectEnterDate: "2020-1-11",
@@ -155,6 +236,8 @@
           subjectID: "",
           subjectScreeningID: "3",
           subjectDrugID: "",
+          subjectSpareDrugID: "",
+          subjectGroup: "",
           subjectInitials: "DFG",
           subjectGender: "female",
           subjectEnterDate: "2020-10-11",
@@ -167,6 +250,8 @@
           subjectID: "1",
           subjectScreeningID: "4",
           subjectDrugID: "1",
+          subjectSpareDrugID: "",
+          subjectGroup: "",
           subjectInitials: "HXK",
           subjectGender: "female",
           subjectEnterDate: "2020-10-15",
@@ -179,6 +264,8 @@
           subjectID: "2",
           subjectScreeningID: "5",
           subjectDrugID: "2",
+          subjectSpareDrugID: "",
+          subjectGroup: "arm1",
           subjectInitials: "VIO",
           subjectGender: "male",
           subjectEnterDate: "2020-10-12",
@@ -191,6 +278,8 @@
           subjectID: "3",
           subjectScreeningID: "6",
           subjectDrugID: "3",
+          subjectSpareDrugID: "A3",
+          subjectGroup: "",
           subjectInitials: "JCS",
           subjectGender: "male",
           subjectEnterDate: "2020-10-9",
@@ -203,6 +292,8 @@
           subjectID: "4",
           subjectScreeningID: "7",
           subjectDrugID: "4",
+          subjectSpareDrugID: "",
+          subjectGroup: "",
           subjectInitials: "CSZ",
           subjectGender: "female",
           subjectEnterDate: "2020-10-5",
@@ -215,6 +306,8 @@
           subjectID: "5",
           subjectScreeningID: "8",
           subjectDrugID: "5",
+          subjectSpareDrugID: "",
+          subjectGroup: "",
           subjectInitials: "PSZ",
           subjectGender: "male",
           subjectEnterDate: "2020-10-15",
@@ -232,14 +325,193 @@
       processResponse: function (statusString) {
         return this.responseMap.get(statusString);
       },
-      createSubject: function () {
-
-      },
       navigate: function (routerName, params) {
         this.$router.push({
           name: routerName,
           params: params,
         });
+      },
+      createSubject: function () {
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'createSubjectModal';
+          this.modalTitle = this.$i18n.t('subjects.createSubjectModalTitle');
+          this.modalType = 'create';
+          this.modalConfirmButtonClass = 'btn-hero';
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#createSubjectModal').modal('show');
+        });
+      },
+      includeSubject: function (subjectScreeningID) {
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'includeSubjectModal';
+          this.modalTitle = this.$i18n.t('subjects.includeSubjectModalTitle');
+          this.modalType = 'include';
+          this.modalConfirmButtonClass = 'btn-success';
+          this.customParameters = {
+            subjectScreeningID: subjectScreeningID
+          };
+          this.modalMessage = this.$i18n.t(
+              'subjects.includeSubjectModalMessage',
+              { subjectScreeningID: subjectScreeningID }
+          );
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#includeSubjectModal').modal('show');
+        });
+      },
+      excludeSubject:  function (subjectScreeningID) {
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'excludeSubjectModal';
+          this.modalTitle = this.$i18n.t('subjects.excludeSubjectModalTitle');
+          this.modalType = 'exclude';
+          this.modalConfirmButtonClass = 'btn-warning';
+          this.customParameters = {
+            subjectScreeningID: subjectScreeningID
+          };
+          this.modalMessage = this.$i18n.t(
+              'subjects.excludeSubjectModalMessage',
+              { subjectScreeningID: subjectScreeningID }
+          );
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#excludeSubjectModal').modal('show');
+        });
+      },
+      getDrugID:  function (subjectScreeningID) {
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'getDrugIDModal';
+          this.modalTitle = this.$i18n.t('subjects.getDrugIDModalTitle');
+          this.modalType = 'getDrugID';
+          this.modalConfirmButtonClass = 'btn-success';
+          this.customParameters = {
+            subjectScreeningID: subjectScreeningID
+          };
+          this.modalMessage = this.$i18n.t(
+              'subjects.getDrugIDModalMessage',
+              { subjectScreeningID: subjectScreeningID }
+          );
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#getDrugIDModal').modal('show');
+        });
+      },
+      getSpareDrugID:  function (subjectScreeningID) {
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'getSpareDrugIDModal';
+          this.modalTitle = this.$i18n.t('subjects.getSpareDrugIDModalTitle');
+          this.modalType = 'getSpareDrugID';
+          this.modalConfirmButtonClass = 'btn-warning';
+          this.customParameters = {
+            subjectScreeningID: subjectScreeningID
+          };
+          this.modalMessage = this.$i18n.t(
+              'subjects.getSpareDrugIDModalMessage',
+              { subjectScreeningID: subjectScreeningID }
+          );
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#getSpareDrugIDModal').modal('show');
+        });
+      },
+      unmaskSubject:  function (subjectScreeningID) {
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'unmaskSubjectModal';
+          this.modalTitle = this.$i18n.t('subjects.unmaskSubjectModalTitle');
+          this.modalType = 'unmaskSubject';
+          this.modalConfirmButtonClass = 'btn-danger';
+          this.customParameters = {
+            subjectScreeningID: subjectScreeningID
+          };
+          this.modalMessage = this.$i18n.t(
+              'subjects.unmaskSubjectModalMessage',
+              { subjectScreeningID: subjectScreeningID }
+          );
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#unmaskSubjectModal').modal('show');
+        });
+      },
+      editSubject:  function (subjectScreeningID) {
+        // 先获取信息，并向subjectResponse赋值
+        this.subjectResponse = this.subjectList[parseInt(subjectScreeningID)-1].subjectResponse;
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'editSubjectModal';
+          this.modalTitle = this.$i18n.t('subjects.editSubjectModalTitle');
+          this.modalType = 'edit';
+          this.modalConfirmButtonClass = 'btn-primary';
+          this.customParameters = {
+            subjectScreeningID: subjectScreeningID
+          };
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          // let modal = document.getElementById("editSubjectModal");
+          // modal.setAttribute('data-backdrop', 'static');
+          // modal.setAttribute('data-keyboard', 'false');
+          $('#editSubjectModal').modal('show');
+        });
+      },
+      deleteSubject:  function (subjectScreeningID) {
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'deleteSubjectModal';
+          this.modalTitle = this.$i18n.t('subjects.deleteSubjectModalTitle');
+          this.modalType = 'delete';
+          this.modalConfirmButtonClass = 'btn-danger';
+          this.customParameters = {
+            subjectScreeningID: subjectScreeningID
+          };
+          this.modalMessage = this.$i18n.t(
+              'subjects.deleteSubjectModalMessage',
+              { subjectScreeningID: subjectScreeningID }
+          );
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#deleteSubjectModal').modal('show');
+        });
+      },
+      processModalConfirmation: function (modelType, customParameters) {
+        switch (modelType) {
+          case 'create':
+            console.log(
+                'create',
+                this.subjectInitials,
+                this.subjectGender,
+            );
+            break;
+          case 'include':
+            console.log('include', customParameters.subjectScreeningID);
+            break;
+          case 'exclude':
+            console.log('exclude', customParameters.subjectScreeningID);
+            break;
+          case 'getDrugID':
+            console.log('getDrugID', customParameters.subjectScreeningID);
+            break;
+          case 'getSpareDrugID':
+            console.log('getSpareDrugID', customParameters.subjectScreeningID);
+            break;
+          case 'unmaskSubject':
+            console.log('unmaskSubject', customParameters.subjectScreeningID);
+            break;
+          case 'edit':
+            console.log(
+                'edit',
+                this.subjectResponse,
+                customParameters.subjectScreeningID,
+            );
+            break;
+          case 'delete':
+            console.log('delete', customParameters.subjectScreeningID);
+            break;
+        }
       },
     },
   }
@@ -264,5 +536,8 @@
   .cursor-pointer:hover {
     color: #635CDB;
     text-decoration: none;
+  }
+  .table {
+    white-space: nowrap;
   }
 </style>

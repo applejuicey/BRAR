@@ -18,7 +18,7 @@
               <a class="nav-link" href="#schemes">{{ $t('homepage.navLink2') }}</a>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'trials' }" class="nav-link">
+              <router-link :to="{ name: 'schemes' }" class="nav-link">
                 {{ $t('homepage.navLink3') }}
               </router-link>
             </li>
@@ -93,8 +93,7 @@
               <div class="service-inner">
                 <router-link :to="{ name: 'type1' }" tag="h4" class="cursor-pointer">
                   <i class="far fa-hand-pointer"></i>
-                  &nbsp;
-                  {{ $t('homepage.method1Title') }}
+                  &nbsp;{{ $t('homepage.method1Title') }}
                 </router-link>
                 <ul class="text-left homepage-ul text-dark font-weight-light">
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method1BriefIntro1') }}</li>
@@ -109,8 +108,7 @@
               <div class="service-inner">
                 <router-link :to="{ name: 'type1' }" tag="h4" class="cursor-pointer">
                   <i class="far fa-hand-pointer"></i>
-                  &nbsp;
-                  {{ $t('homepage.method2Title') }}
+                  &nbsp;{{ $t('homepage.method2Title') }}
                 </router-link>
                 <ul class="text-left homepage-ul text-dark font-weight-light">
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method2BriefIntro1') }}</li>
@@ -125,8 +123,7 @@
               <div class="service-inner">
                 <router-link :to="{ name: 'type1' }" tag="h4" class="cursor-pointer">
                   <i class="far fa-hand-pointer"></i>
-                  &nbsp;
-                  {{ $t('homepage.method3Title') }}
+                  &nbsp;{{ $t('homepage.method3Title') }}
                 </router-link>
                 <ul class="text-left homepage-ul text-dark font-weight-light">
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method3BriefIntro1') }}</li>
@@ -139,10 +136,9 @@
           <div class="col-lg-12 col-md-6">
             <div class="service-box">
               <div class="service-inner">
-                <router-link :to="{ name: 'type1' }" tag="h4" class="cursor-pointer">
+                <router-link :to="{ name: 'custom' }" tag="h4" class="cursor-pointer">
                   <i class="far fa-hand-point-right"></i>
-                  &nbsp;
-                  {{ $t('homepage.method4Title') }}
+                  &nbsp;{{ $t('homepage.method4Title') }}
                 </router-link>
                 <div class="text-left text-dark font-weight-light">{{ $t('homepage.method4BriefIntro1') }}</div>
                 <ul class="text-left homepage-ul text-dark font-weight-light">
@@ -167,16 +163,10 @@
     }),
     components: {},
     mounted: function () {
-      window.onscroll = function() {
-        let navbar = document.getElementById("navbar");
-        let navbarHeight = navbar.offsetHeight;
-        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        if(scrollTop > navbarHeight){
-          navbar.classList.add("bg-dark");
-        }else{
-          navbar.classList.remove("bg-dark");
-        }
-      }
+      window.addEventListener('scroll', this.changeNavbarBGColor);
+    },
+    beforeDestroy: function () {
+      window.removeEventListener('scroll', this.changeNavbarBGColor);
     },
     methods: {
       toggleLanguage: function () {
@@ -186,6 +176,16 @@
           this.$i18n.locale = 'en';
         }
       },
+      changeNavbarBGColor: function () {
+        let navbar = document.getElementById("navbar");
+        let navbarHeight = navbar.offsetHeight;
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop > navbarHeight) {
+          navbar.classList.add("bg-dark");
+        } else {
+          navbar.classList.remove("bg-dark");
+        }
+      }
     },
   }
 </script>
