@@ -13,7 +13,7 @@
 
         <div class="row">
           <div class="col-12 table-responsive">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover text-center">
               <thead>
               <tr>
                 <th scope="col"></th>
@@ -31,7 +31,7 @@
                     <div class="progress">
                       <div class="progress-bar progress-bar-striped progress-bar-animated"
                            :style="`width: ${
-                             Math.floor(parseInt(scheme.trialSampleSizeCurrent)/parseInt(scheme.maximumSampleSize) * 100)
+                             Math.floor(parseInt(scheme.subjects.length)/parseInt(scheme.maximumSampleSize) * 100)
                            }%`"></div>
                     </div>
                   </td>
@@ -89,9 +89,7 @@
           'limit': '5',
         },
       }).then((response) => {
-        console.log(response.data.schemes.rows);
-        this.schemes = response.data.schemes.rows;
-        // TODO 再去服务器拉取每个方案当前入组人数
+        this.schemes = response.data.schemesAndInfo.rows;
       }).catch((error) =>  {
         console.log(error);
       });

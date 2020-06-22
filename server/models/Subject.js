@@ -10,6 +10,10 @@ Subject.init({
     autoIncrement: true,
     primaryKey: true,
   },
+  subjectID: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
   subjectDrugID: {
     type: Sequelize.INTEGER,
     allowNull: true,

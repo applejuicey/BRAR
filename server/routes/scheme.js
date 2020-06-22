@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const { getAllSchemes, getOneScheme } = require('../controllers/SchemeController');
+const { getAllSchemesAndInfo, getOneScheme } = require('../controllers/SchemeController');
 
 // base: /scheme
 
-// GET /scheme/all get all schemes
+// GET /scheme/all get all schemes and related information
 // req.query.offset number of records jumped
 // req.query.limit number of records needed
 router.get('/all', async function (req, res) {
@@ -22,13 +22,13 @@ router.get('/all', async function (req, res) {
   let result = {};
   try {
     result = await (async function () {
-      const schemes = await getAllSchemes(
+      const schemesAndInfo = await getAllSchemesAndInfo(
           parseInt(req.query.offset),
           parseInt(req.query.limit),
       );
       return {
         statusCode: "1",
-        schemes: schemes,
+        schemesAndInfo: schemesAndInfo,
       };
     }) ();
   } catch (error) {
@@ -36,7 +36,7 @@ router.get('/all', async function (req, res) {
     result = {
       statusCode: "0",
       error: {
-        message: `unknown error when get all schemes: ${error}`,
+        message: `unknown error when get all schemes and related info: ${error}`,
         errorCode: '0_GETALL_SCHEMES',
       },
     };

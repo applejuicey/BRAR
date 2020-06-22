@@ -1,22 +1,24 @@
 const { Scheme, Subject } = require('../models/index');
 const { getType } = require('../utils/index');
+const { Op } = require("sequelize");
 
-const getIncludeArray = function () {
-  return [
-    {
-      model: Subject,
-      as: 'subjects',
-    },
-  ];
-};
-
-// 查找所有Scheme，根据offset和limit返回用户数据（包括子表的字段）
-const getAllSchemes = async function(offset, limit) {
+// get all schemes and related information according to 'offset' and 'limit'
+const getAllSchemesAndInfo = async function(offset, limit) {
   return Scheme.findAndCountAll({
     distinct: true,
     offset: getType(offset) === 'Number' ? Math.round(offset) : 0,
     limit: getType(limit) === 'Number' ? Math.round(limit) : 10,
-    // include: getIncludeArray(),
+    include: {
+      model: Subject,
+      as: 'subjects',
+      attributes: ['subjectRandomisationStatus'],
+      where: {
+        subjectRandomisationStatus: {
+          [Op.or]: ['allocated', 'unmasked', 'spare']
+        }
+      },
+      required: false,
+    },
     attributes: ['schemeUUID', 'schemeName', 'maximumSampleSize']
   });
 };
@@ -57,4 +59,4 @@ const deleteScheme = async function(where) {
   });
 };
 
-module.exports = { getAllSchemes, getOneScheme, createScheme, deleteScheme };
+module.exports = { getAllSchemesAndInfo, getOneScheme, createScheme, deleteScheme };

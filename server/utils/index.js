@@ -31,4 +31,12 @@ const getType = function (variable) {
   return (/^\[object\s(.*)\]$/.exec(Object.prototype.toString.call(variable)))[1];
 };
 
-module.exports = { filterArrayBySpecifiedKeys, getType };
+const format = function (anArray) {
+  let aString = '';
+  for(let element of anArray) {
+    aString = aString + element + ' ';
+  }
+  return aString;
+};
+
+module.exports = { filterArrayBySpecifiedKeys, getType, format };
