@@ -20,11 +20,6 @@ export default new Router({
       component: () => import('./views/Homepage.vue')
     },
     {
-      path: '/type1',
-      name: 'type1',
-      component: () => import('./views/Scheme/Type1.vue')
-    },
-    {
       path: '/custom',
       name: 'custom',
       component: () => import('./views/Scheme/Custom.vue')

@@ -3,8 +3,7 @@ const Model = Sequelize.Model;
 const sequelize = require('../database/sequelize');
 
 class Scheme extends Model {}
-// Scheme.writableFieldsKeyNamesArray = ['schemeName', 'userPassword', 'userEmail'];
-// Scheme.defaultAccessibleFieldsKeyNamesArray = ['userUUID', 'userAccountName', 'userPassword', 'userEmail'];
+
 Scheme.init({
   schemeUUID: {
     type: Sequelize.UUID,
@@ -49,15 +48,6 @@ Scheme.init({
     validate: {
       notNull: {
         msg: 'an early winner threshold should be specified'
-      },
-    },
-  },
-  finalWinnerThreshold: {
-    type: Sequelize.FLOAT,
-    allowNull: false,
-    validate: {
-      notNull: {
-        msg: 'a final winner threshold should be specified'
       },
     },
   },

@@ -62,10 +62,10 @@
                         <i class="fas fa-caret-right"></i>&nbsp;
                         {{ $t('custom.earlyWinnerDefinition') }}
                       </li>
-                      <li>
-                        <i class="fas fa-caret-right"></i>&nbsp;
-                        {{ $t('custom.finalWinnerDefinition') }}
-                      </li>
+<!--                      <li>-->
+<!--                        <i class="fas fa-caret-right"></i>&nbsp;-->
+<!--                        {{ $t('custom.finalWinnerDefinition') }}-->
+<!--                      </li>-->
                     </ul>
                   </div>
                   <div class="col-md-6 form-group">
@@ -84,14 +84,14 @@
                     <input type="text" class="form-control form-control-lg" v-model="earlyWinnerThreshold" :placeholder="$t('custom.earlyWinnerThresholdHolder')"
                            id="earlyWinnerThreshold" required>
                   </div>
-                  <div class="col-md-6 form-group">
-                    <label for="finalWinnerThreshold">
-                      {{ $t('custom.finalWinnerThresholdHolder') }}&nbsp;
-                      <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.finalWinnerThresholdInstruction')"></i>
-                    </label>
-                    <input type="text" class="form-control form-control-lg" v-model="finalWinnerThreshold" :placeholder="$t('custom.finalWinnerThresholdHolder')"
-                           id="finalWinnerThreshold" required>
-                  </div>
+<!--                  <div class="col-md-6 form-group">-->
+<!--                    <label for="finalWinnerThreshold">-->
+<!--                      {{ $t('custom.finalWinnerThresholdHolder') }}&nbsp;-->
+<!--                      <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.finalWinnerThresholdInstruction')"></i>-->
+<!--                    </label>-->
+<!--                    <input type="text" class="form-control form-control-lg" v-model="finalWinnerThreshold" :placeholder="$t('custom.finalWinnerThresholdHolder')"-->
+<!--                           id="finalWinnerThreshold" required>-->
+<!--                  </div>-->
                   <div class="col-md-6 form-group">
                     <label for="clinicalSignificanceThreshold">
                       {{ $t('custom.clinicalSignificanceThresholdHolder') }}&nbsp;
@@ -176,28 +176,28 @@
                 <div class="row">
                   <div class="col-12 form-group">
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="adjustmentMethod1" value="adjustmentMethod1" v-model="adjustmentMethod">
+                      <input class="form-check-input" type="checkbox" id="adjustmentMethod1" v-model="adjustmentMethod1">
                       <label class="form-check-label" for="adjustmentMethod1">
                         {{ $t('custom.adjustmentMethod1') }}
                         <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.adjustmentMethod1Instruction')"></i>
                       </label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="adjustmentMethod2" value="adjustmentMethod2" v-model="adjustmentMethod">
+                      <input class="form-check-input" type="checkbox" id="adjustmentMethod2" v-model="adjustmentMethod2">
                       <label class="form-check-label" for="adjustmentMethod2">
                         {{ $t('custom.adjustmentMethod2') }}
                         <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.adjustmentMethod2Instruction')"></i>
                       </label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="adjustmentMethod3" value="adjustmentMethod3" v-model="adjustmentMethod">
+                      <input class="form-check-input" type="checkbox" id="adjustmentMethod3" v-model="adjustmentMethod3">
                       <label class="form-check-label" for="adjustmentMethod3">
                         {{ $t('custom.adjustmentMethod3') }}
                         <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.adjustmentMethod3Instruction')"></i>
                       </label>
                     </div>
                   </div>
-                  <div class="col-md-6 form-group" v-show="adjustmentMethod.includes('adjustmentMethod1')">
+                  <div class="col-md-6 form-group" v-show="adjustmentMethod1 === true">
                     <label for="burnInBlockNumber">
                       {{ $t('custom.burnInBlockNumberHolder') }}&nbsp;
                       <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.burnInBlockNumberInstruction')"></i>
@@ -205,7 +205,7 @@
                     <input type="text" class="form-control form-control-lg" v-model="burnInBlockNumber" :placeholder="$t('custom.burnInBlockNumberHolder')"
                            id="burnInBlockNumber" required>
                   </div>
-                  <div class="col-md-6 form-group" v-show="adjustmentMethod.includes('adjustmentMethod1')">
+                  <div class="col-md-6 form-group" v-show="adjustmentMethod1 === true">
                     <label for="burnInBlockLength">
                       {{ $t('custom.burnInBlockLengthHolder') }}&nbsp;
                       <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.burnInBlockLengthInstruction')"></i>
@@ -213,7 +213,7 @@
                     <input type="text" class="form-control form-control-lg" v-model="burnInBlockLength" :placeholder="$t('custom.burnInBlockLengthHolder')"
                            id="burnInBlockLength" required>
                   </div>
-                  <div class="col-md-6 form-group" v-show="adjustmentMethod.includes('adjustmentMethod2')">
+                  <div class="col-md-6 form-group" v-show="adjustmentMethod2 === true">
                     <label for="tuningParameterType">
                       {{ $t('custom.tuningParameterTypeHolder') }}&nbsp;
                       <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.tuningParameterTypeInstruction')"></i>
@@ -224,7 +224,7 @@
                       <option value="adapted">{{ $t('custom.tuningParameterType2') }}</option>
                     </select>
                   </div>
-                  <div class="col-md-6 form-group" v-show="adjustmentMethod.includes('adjustmentMethod2') && tuningParameterType === 'fixed'">
+                  <div class="col-md-6 form-group" v-show="adjustmentMethod2 === true && tuningParameterType === 'fixed'">
                     <label for="tuningParameterValue">
                       {{ $t('custom.tuningParameterValueHolder') }}&nbsp;
                       <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.tuningParameterValueInstruction')"></i>
@@ -232,7 +232,7 @@
                     <input type="text" class="form-control form-control-lg" v-model="tuningParameterValue" :placeholder="$t('custom.tuningParameterValueHolder')"
                            id="tuningParameterValue" required>
                   </div>
-                  <div class="col-md-6 form-group" v-show="adjustmentMethod.includes('adjustmentMethod3')">
+                  <div class="col-md-6 form-group" v-show="adjustmentMethod3 === true">
                     <label for="clipMethodMinimumThreshold">
                       {{ $t('custom.clipMethodMinimumThresholdHolder') }}&nbsp;
                       <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.clipMethodMinimumThresholdInstruction')"></i>
@@ -251,13 +251,21 @@
             <div class="row">
               <div class="col-12 m-auto">
                 <div class="row">
-                  <div class="col-12 form-group">
+                  <div class="col-md-6 form-group">
                     <label for="armNumber">
                       {{ $t('custom.armNumberHolder') }}&nbsp;
                       <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.armNumberInstruction')"></i>
                     </label>
                     <input type="text" class="form-control form-control-lg" v-model="armNumber" :placeholder="$t('custom.armNumberHolder')"
                            id="armNumber" required>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label for="maximumSampleSize">
+                      {{ $t('custom.maximumSampleSizeHolder') }}&nbsp;
+                      <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('custom.maximumSampleSizeInstruction')"></i>
+                    </label>
+                    <input type="text" class="form-control form-control-lg" v-model="maximumSampleSize" :placeholder="$t('custom.maximumSampleSizeHolder')"
+                           id="maximumSampleSize" required>
                   </div>
                   <div class="col-md-6 form-group">
                     <label for="adaptiveBlockNumber">
@@ -300,13 +308,13 @@
             <div class="row my-5">
               <div class="col-12 m-auto text-center">
                 <div class="btn-group btn-group-lg">
-                  <button class="btn btn-hero" @click="submit" data-toggle="tooltip" data-placement="top" :title="$t('type1.submitInstruction')">
+                  <button class="btn btn-hero" @click="createScheme">
                     {{ $t('custom.submit') }}
                   </button>
-                  <button class="btn btn-primary" @click="loadExample" data-toggle="tooltip" data-placement="top" :title="$t('type1.loadExampleInstruction')">
+                  <button class="btn btn-primary" @click="loadExample">
                     {{ $t('custom.loadExample') }}
                   </button>
-                  <button class="btn btn-secondary" @click="navigate('homepage')" data-toggle="tooltip" data-placement="top" :title="$t('type1.homeInstruction')">
+                  <button class="btn btn-secondary" @click="navigate('homepage')">
                     {{ $t('custom.home') }}
                   </button>
                 </div>
@@ -321,7 +329,17 @@
     <modal :modalID="modalID" :modalTitle="modalTitle" :modalType="modalType"
            :modalConfirmButtonClass="modalConfirmButtonClass" @modalConfirmation="processModalConfirmation"
            :customParameters="customParameters">
-      <template v-slot:modalBody v-if="['submit'].includes(modalType)">
+      <template v-slot:modalBody v-if="['create'].includes(modalType)">
+        <span>
+          {{ modalMessage }}
+        </span>
+      </template>
+    </modal>
+
+    <modal modalID="responseModal" :modalTitle="modalTitle" modalType="response"
+           :modalConfirmButtonClass="modalConfirmButtonClass" @modalConfirmation="processModalConfirmation"
+           :customParameters="customParameters">
+      <template v-slot:modalBody>
         <span>
           {{ modalMessage }}
         </span>
@@ -345,77 +363,76 @@
       customParameters: null,
       modalMessage: null,
       schemeName: null,
-      decisionStrategy: 'decisionStrategy1',
+      decisionStrategy: null,
       earlyDropThreshold: null,
       earlyWinnerThreshold: null,
-      finalWinnerThreshold: null,
       clinicalSignificanceThreshold: null,
       clinicalSignificanceValue: null,
-      constructionMethod: 'constructionMethod2',
-      adjustmentMethod: ['adjustmentMethod1', 'adjustmentMethod2', 'adjustmentMethod3'],
+      constructionMethod: null,
+      adjustmentMethod1: true,
+      adjustmentMethod2: true,
+      adjustmentMethod3: true,
       burnInBlockNumber: null,
       burnInBlockLength: null,
       tuningParameterType: 'fixed',
       tuningParameterValue: null,
       clipMethodMinimumThreshold: null,
       armNumber: null,
+      maximumSampleSize: null,
       adaptiveBlockNumber: null,
       adaptiveBlockLength: null,
       betaPriorParameterA: [],
       betaPriorParameterB: [],
     }),
-    created: function () {
-
+    mounted: function () {
+      if (localStorage.getItem('defaultScheme')) {
+        const defaultScheme = JSON.parse(localStorage.getItem('defaultScheme'));
+        this.decisionStrategy = defaultScheme.decisionStrategy;
+        this.constructionMethod = defaultScheme.constructionMethod;
+      } else {
+        this.decisionStrategy = this.$route.params.defaultScheme.decisionStrategy;
+        this.constructionMethod = this.$route.params.defaultScheme.constructionMethod;
+        localStorage.setItem('defaultScheme', JSON.stringify(this.$route.params.defaultScheme));
+      }
+    },
+    beforeDestroy () {
+      localStorage.removeItem('defaultScheme');
     },
     methods: {
-      submit: function () {
+      createScheme: function () {
         let initiateModalPromise = new Promise((resolve, reject) => {
-          this.modalID = 'submitSchemeModal';
+          this.modalID = 'createSchemeModal';
           this.modalTitle = this.$i18n.t('custom.submitSchemeModalTitle');
-          this.modalType = 'submit';
+          this.modalType = 'create';
           this.modalConfirmButtonClass = 'btn-hero';
-          this.customParameters = {
-            // subjectScreeningID: subjectScreeningID
-          };
           this.modalMessage = this.$i18n.t(
               'custom.submitSchemeModalMessage',
           );
           resolve();
         });
         initiateModalPromise.then(() => {
-          $('#submitSchemeModal').modal('show');
+          $('#createSchemeModal').modal('show');
         });
-
-        // let self = this;
-        // this.$axios.post('http://localhost:3000/rscripts/type1', {
-        //
-        // }, {
-        //   headers: {
-        //     'Content-Type': 'application/json;charset=utf-8'
-        //   }
-        // }).then(function (response) {
-        //
-        // }).catch(function (error) {
-        //   self.responseModalMessage = 'damn';
-        //   $('#responseModal').modal('show');
-        //   console.log(error);
-        // });
-
       },
       loadExample: function () {
         this.schemeName = 'Example Scheme ' + new Date().getTime();
+        this.decisionStrategy = 'decisionStrategy1';
         this.earlyDropThreshold = 0.01;
         this.earlyWinnerThreshold = 0.99;
-        this.finalWinnerThreshold = 0.95;
         this.clinicalSignificanceThreshold = 0;
-        this.clinicalSignificanceValue = 0.2;
-        this.burnInBlockNumber = 10;
-        this.burnInBlockLength = 5;
+        this.constructionMethod = 'constructionMethod2';
+        this.adjustmentMethod1 = true;
+        this.adjustmentMethod2 = true;
+        this.adjustmentMethod3= true;
+        this.burnInBlockNumber = 1;
+        this.burnInBlockLength = 6;
+        this.tuningParameterType = 'fixed';
         this.tuningParameterValue = 0.5;
         this.clipMethodMinimumThreshold = 0.1;
         this.armNumber = 3;
-        this.adaptiveBlockNumber = 40;
-        this.adaptiveBlockLength = 5;
+        this.maximumSampleSize = 120;
+        this.adaptiveBlockNumber = 19;
+        this.adaptiveBlockLength = 6;
         this.betaPriorParameterA = [1, 1, 1];
         this.betaPriorParameterB = [1, 1, 1];
       },
@@ -426,13 +443,60 @@
       },
       processModalConfirmation: function (modelType, customParameters) {
         switch (modelType) {
-          case 'submit':
-            console.log(
-                'submit',
-                this.subjectInitials,
-                this.subjectGender,
-            );
+          case 'create':
+            this.$axios.post('/api/scheme', {
+              schemeName: this.schemeName,
+              decisionStrategy: this.decisionStrategy,
+              earlyDropThreshold: this.earlyDropThreshold,
+              earlyWinnerThreshold: this.earlyWinnerThreshold,
+              clinicalSignificanceThreshold: this.clinicalSignificanceThreshold,
+              clinicalSignificanceValue: this.clinicalSignificanceValue,
+              constructionMethod: this.constructionMethod,
+              adjustmentMethod1: this.adjustmentMethod1,
+              adjustmentMethod2: this.adjustmentMethod2,
+              adjustmentMethod3: this.adjustmentMethod3,
+              burnInBlockNumber: this.burnInBlockNumber,
+              burnInBlockLength: this.burnInBlockLength,
+              tuningParameterType: this.tuningParameterType,
+              tuningParameterValue: this.tuningParameterValue,
+              clipMethodMinimumThreshold: this.clipMethodMinimumThreshold,
+              armNumber: this.armNumber,
+              maximumSampleSize: this.maximumSampleSize,
+              adaptiveBlockNumber: this.adaptiveBlockNumber,
+              adaptiveBlockLength: this.adaptiveBlockLength,
+              betaPriorParameterA: this.betaPriorParameterA,
+              betaPriorParameterB: this.betaPriorParameterB,
+            }).then((response) => {
+              this.callResponseModal(response);
+            }).catch((error) => {
+              console.error(error);
+            });
             break;
+          case 'response':
+            setTimeout(() => {
+              this.$router.push({
+                name: 'schemes',
+              });
+            }, 1000 )
+            break;
+        }
+      },
+      callResponseModal: function (response) {
+        if (response.data.statusCode === '0') {
+          this.modalTitle = this.$i18n.t('modal.errorResponseModalTitle');
+          this.modalMessage = this.$i18n.t(
+              'modal.errorResponseModalMessage',
+              {
+                errorReason: response.data.error.errorCode + ' ' + response.data.error.message
+              }
+          );
+          this.modalConfirmButtonClass = 'btn-danger';
+          $('#responseModal').modal('show');
+        } else {
+          this.modalTitle = this.$i18n.t('modal.successResponseModalTitle');
+          this.modalMessage = this.$i18n.t('modal.successResponseModalMessage');
+          this.modalConfirmButtonClass = 'btn-success';
+          $('#responseModal').modal('show');
         }
       },
     },

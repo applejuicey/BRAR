@@ -38,13 +38,14 @@
                   <td>
                     <span class="cursor-pointer" @click="navigate('subjects', {
                       schemeUUID: scheme.schemeUUID
-                    })">
+                    })" data-toggle="tooltip" data-placement="top" :title="$t('schemes.subjectList')">
                        <i class="fas fa-list text-success"></i>&nbsp;
                     </span>
 <!--                    <span class="cursor-pointer">-->
 <!--                      <i class="far fa-edit text-primary"></i>&nbsp;-->
 <!--                    </span>-->
-                    <span class="cursor-pointer">
+                    <span class="cursor-pointer" @click="deleteScheme(scheme.schemeUUID, scheme.schemeName)"
+                          data-toggle="tooltip" data-placement="top" :title="$t('schemes.delete')">
                       <i class="far fa-trash-alt text-danger"></i>&nbsp;
                     </span>
                   </td>
@@ -58,10 +59,16 @@
         <div class="row my-5">
           <div class="col-12 m-auto text-center">
             <div class="btn-group btn-group-lg">
-              <button class="btn btn-hero" @click="navigate('custom')" data-toggle="tooltip" data-placement="top" :title="$t('schemes.createScheme')">
+              <button class="btn btn-hero"
+                      @click="navigate('custom', {
+                defaultScheme: {
+                    decisionStrategy: 'decisionStrategy1',
+                    constructionMethod: 'constructionMethod2'
+                }
+                })">
                 {{ $t('schemes.create') }}
               </button>
-              <button class="btn btn-secondary" @click="navigate('homepage')" data-toggle="tooltip" data-placement="top" :title="$t('schemes.homeInstruction')">
+              <button class="btn btn-secondary" @click="navigate('homepage')">
                 {{ $t('schemes.home') }}
               </button>
             </div>
@@ -71,13 +78,43 @@
       </div>
     </section>
 
+    <modal :modalID="modalID" :modalTitle="modalTitle" :modalType="modalType"
+           :modalConfirmButtonClass="modalConfirmButtonClass" @modalConfirmation="processModalConfirmation"
+           :customParameters="customParameters">
+      <template v-slot:modalBody v-if="['delete'].includes(modalType)">
+        <span>
+          {{ modalMessage }}
+        </span>
+      </template>
+    </modal>
+
+    <modal modalID="responseModal" :modalTitle="modalTitle" modalType="response"
+           :modalConfirmButtonClass="modalConfirmButtonClass" @modalConfirmation="processModalConfirmation"
+           :customParameters="customParameters">
+      <template v-slot:modalBody>
+        <span>
+          {{ modalMessage }}
+        </span>
+      </template>
+    </modal>
+
   </div>
 </template>
 
 <script>
+  import Modal from '@/components/Modal.vue';
   export default {
+    components: {
+      Modal
+    },
     data: () => ({
       schemes: [],
+      modalID: null,
+      modalTitle: null,
+      modalType: null,
+      modalConfirmButtonClass: null,
+      customParameters: null,
+      modalMessage: null,
     }),
     mounted: function () {
       this.$axios.get('/api/scheme/all', {
@@ -85,8 +122,8 @@
           'Content-Type': 'application/json;charset=utf-8'
         },
         params: {
-          'offset': '0',
-          'limit': '5',
+          // 'offset': '0',
+          // 'limit': '5',
         },
       }).then((response) => {
         this.schemes = response.data.schemesAndInfo.rows;
@@ -100,6 +137,63 @@
           name: routerName,
           params: params,
         });
+      },
+      deleteScheme:  function (schemeUUID, schemeName) {
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'deleteSchemeModal';
+          this.modalTitle = this.$i18n.t('schemes.deleteSchemeModalTitle');
+          this.modalType = 'delete';
+          this.modalConfirmButtonClass = 'btn-danger';
+          this.customParameters = {
+            schemeUUID: schemeUUID
+          };
+          this.modalMessage = this.$i18n.t(
+              'schemes.deleteSchemeModalMessage',
+              { schemeName: schemeName }
+          );
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#deleteSchemeModal').modal('show');
+        });
+      },
+      processModalConfirmation: function (modelType, customParameters) {
+        switch (modelType) {
+          case 'delete':
+            this.$axios.delete('/api/scheme', {
+              params: {
+                schemeUUID: customParameters.schemeUUID
+              }
+            }).then((response) => {
+              this.callResponseModal(response);
+            }).catch((error) => {
+              console.error(error);
+            });
+            break;
+          case 'response':
+            setTimeout(() => {
+              location.reload();
+            }, 1000 )
+            break;
+        }
+      },
+      callResponseModal: function (response) {
+        if (response.data.statusCode === '0') {
+          this.modalTitle = this.$i18n.t('modal.errorResponseModalTitle');
+          this.modalMessage = this.$i18n.t(
+              'modal.errorResponseModalMessage',
+              {
+                errorReason: response.data.error.errorCode + ' ' + response.data.error.message
+              }
+          );
+          this.modalConfirmButtonClass = 'btn-danger';
+          $('#responseModal').modal('show');
+        } else {
+          this.modalTitle = this.$i18n.t('modal.successResponseModalTitle');
+          this.modalMessage = this.$i18n.t('modal.successResponseModalMessage');
+          this.modalConfirmButtonClass = 'btn-success';
+          $('#responseModal').modal('show');
+        }
       },
     },
   }

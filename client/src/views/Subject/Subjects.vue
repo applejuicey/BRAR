@@ -13,7 +13,7 @@
 
         <div class="row">
           <div class="col-12 table-responsive custom-height">
-            <table class="table table-striped table-hover text-center">
+            <table class="table table-striped table-hover text-center" data-toggle="table" data-height="200">
               <thead>
               <tr>
                 <th scope="col"></th>
@@ -61,30 +61,37 @@
                   <td>{{ processResponse(subject.subjectResponse) }}</td>
                   <td class="text-right">
                     <span class="cursor-pointer" @click="includeSubject(subject.subjectScreeningID)"
-                          v-if="subject.subjectRandomisationStatus === 'screen'">
+                          v-if="subject.subjectRandomisationStatus === 'screen'"
+                          data-toggle="tooltip" data-placement="top" :title="$t('subjects.includeSubjectModalTitle')">
                        <i class="far fa-check-circle text-success"></i>&nbsp;
                     </span>
                     <span class="cursor-pointer" @click="excludeSubject(subject.subjectScreeningID)"
-                          v-if="subject.subjectRandomisationStatus === 'screen'">
+                          v-if="subject.subjectRandomisationStatus === 'screen'"
+                          data-toggle="tooltip" data-placement="top" :title="$t('subjects.excludeSubjectModalTitle')">
                       <i class="far fa-times-circle text-warning"></i>&nbsp;
                     </span>
                     <span class="cursor-pointer" @click="getDrugID(subject.subjectScreeningID)"
-                          v-if="subject.subjectRandomisationStatus === 'include'">
+                          v-if="subject.subjectRandomisationStatus === 'include'"
+                          data-toggle="tooltip" data-placement="top" :title="$t('subjects.getDrugIDModalTitle')">
                       <i class="fas fa-capsules text-success"></i>&nbsp;
                     </span>
                     <span class="cursor-pointer" @click="getSpareDrugID(subject.subjectScreeningID)"
-                          v-if="subject.subjectRandomisationStatus === 'allocated'">
+                          v-if="subject.subjectRandomisationStatus === 'allocated'"
+                          data-toggle="tooltip" data-placement="top" :title="$t('subjects.getSpareDrugIDModalTitle')">
                       <i class="fas fa-truck text-warning"></i>&nbsp;
                     </span>
                     <span class="cursor-pointer" @click="unmaskSubject(subject.subjectScreeningID)"
-                          v-if="subject.subjectRandomisationStatus === 'allocated' || subject.subjectRandomisationStatus === 'spare'">
+                          v-if="subject.subjectRandomisationStatus === 'allocated' || subject.subjectRandomisationStatus === 'spare'"
+                          data-toggle="tooltip" data-placement="top" :title="$t('subjects.unmaskSubjectModalTitle')">
                       <i class="far fa-eye text-danger"></i>&nbsp;
                     </span>
                     <span class="cursor-pointer" @click="editSubject(subject.subjectScreeningID)"
-                          v-if="subject.subjectRandomisationStatus === 'allocated' || subject.subjectRandomisationStatus === 'spare' ||  subject.subjectRandomisationStatus === 'unmasked'">
+                          v-if="subject.subjectRandomisationStatus === 'allocated' || subject.subjectRandomisationStatus === 'spare' ||  subject.subjectRandomisationStatus === 'unmasked'"
+                          data-toggle="tooltip" data-placement="top" :title="$t('subjects.editSubjectModalTitle')">
                       <i class="far fa-edit text-primary"></i>&nbsp;
                     </span>
-                    <span class="cursor-pointer" @click="deleteSubject(subject.subjectScreeningID)">
+                    <span class="cursor-pointer" @click="deleteSubject(subject.subjectScreeningID)"
+                          data-toggle="tooltip" data-placement="top" :title="$t('subjects.deleteSubjectModalTitle')">
                       <i class="far fa-trash-alt text-danger"></i>&nbsp;
                     </span>
                   </td>
@@ -98,12 +105,10 @@
         <div class="row my-5">
           <div class="col-12 m-auto text-center">
             <div class="btn-group btn-group-lg">
-              <button class="btn btn-hero" @click="createSubject" data-toggle="tooltip"
-                      data-placement="top" :title="$t('subjects.createSubject')">
+              <button class="btn btn-hero" @click="createSubject">
                 {{ $t('subjects.create') }}
               </button>
-              <button class="btn btn-secondary" @click="navigate('homepage')"
-                      data-toggle="tooltip" data-placement="top" :title="$t('subjects.homeInstruction')">
+              <button class="btn btn-secondary" @click="navigate('homepage')">
                 {{ $t('subjects.home') }}
               </button>
             </div>
@@ -218,16 +223,16 @@
       schemeUUID: null,
       subjectList: [],
       randomisationStatusMap: new Map()
-          .set('screen', 'Under Screening')
-          .set('include', 'to be Allocated')
-          .set('exclude', 'Excluded')
-          .set('allocated', 'Allocated')
-          .set('unmasked', 'Unmasked')
-          .set('spare', 'Spare Drug Used'),
+          .set('screen', ['Under Screening', '等待筛检'])
+          .set('include', ['to be Allocated', '等待分组'])
+          .set('exclude', ['Excluded', '被排除'])
+          .set('allocated', ['Allocated', '已分组'])
+          .set('unmasked', ['Unmasked', '已紧急揭盲'])
+          .set('spare', ['Spare Drug Used', '已使用备用药物']),
       responseMap: new Map()
-          .set('unknown', 'Unknown')
-          .set('yes', 'Yes')
-          .set('no', 'No'),
+          .set('unknown', ['Unknown', '暂时未知'])
+          .set('yes', ['Yes', '响应'])
+          .set('no', ['No', '无响应']),
       subjectInitials: null,
       subjectGender: null,
       subjectMedicationMax: null,
@@ -242,7 +247,7 @@
     }),
     mounted: function () {
       if (localStorage.getItem('schemeUUID')) {
-        this.schemeUUID = JSON.parse(localStorage.getItem('schemeUUID'))
+        this.schemeUUID = JSON.parse(localStorage.getItem('schemeUUID'));
       } else {
         this.schemeUUID = this.$route.params.schemeUUID;
         localStorage.setItem('schemeUUID', JSON.stringify(this.$route.params.schemeUUID));
@@ -252,8 +257,8 @@
           'Content-Type': 'application/json;charset=utf-8'
         },
         params: {
-          'offset': '0',
-          'limit': '10',
+          // 'offset': '0',
+          // 'limit': '10',
           schemeSchemeUUID: this.schemeUUID,
         },
       }).then((response) => {
@@ -263,14 +268,22 @@
       });
     },
     beforeDestroy () {
-      localStorage.removeItem('schemeUUID')
+      localStorage.removeItem('schemeUUID');
     },
     methods: {
       processRandomisationStatus: function (statusString) {
-        return this.randomisationStatusMap.get(statusString);
+        if (this.$i18n.locale === 'en') {
+          return this.randomisationStatusMap.get(statusString)[0];
+        } else {
+          return this.randomisationStatusMap.get(statusString)[1];
+        }
       },
       processResponse: function (statusString) {
-        return this.responseMap.get(statusString);
+        if (this.$i18n.locale === 'en') {
+          return this.responseMap.get(statusString)[0];
+        } else {
+          return this.responseMap.get(statusString)[1];
+        }
       },
       navigate: function (routerName, params) {
         this.$router.push({
@@ -525,30 +538,9 @@
                 subjectScreeningID: customParameters.subjectScreeningID
               }
             }).then((response) => {
-              if (response.data.statusCode === '0') {
-                this.modalTitle = this.$i18n.t('subjects.errorResponseModalTitle');
-                this.modalMessage = this.$i18n.t(
-                    'subjects.errorResponseModalMessage',
-                    {
-                      errorReason: response.data.error.errorCode + ' ' + response.data.error.message
-                    }
-                );
-                this.modalConfirmButtonClass = 'btn-danger';
-                $('#responseModal').modal('show');
-              } else {
-                this.modalTitle = this.$i18n.t('subjects.successResponseModalTitle');
-                this.modalMessage = this.$i18n.t('subjects.successResponseModalMessage');
-                this.modalConfirmButtonClass = 'btn-success';
-                $('#responseModal').modal('show');
-              }
+              this.callResponseModal(response);
             }).catch((error) => {
-              this.modalTitle = this.$i18n.t('subjects.errorResponseModalTitle');
-              this.modalMessage = this.$i18n.t(
-                  'subjects.errorResponseModalMessage',
-                  { errorReason: error }
-              );
-              this.modalConfirmButtonClass = 'btn-danger';
-              $('#responseModal').modal('show');
+              console.error(error);
             });
             break;
           case 'response':
@@ -560,9 +552,9 @@
       },
       callResponseModal: function (response) {
         if (response.data.statusCode === '0') {
-          this.modalTitle = this.$i18n.t('subjects.errorResponseModalTitle');
+          this.modalTitle = this.$i18n.t('modal.errorResponseModalTitle');
           this.modalMessage = this.$i18n.t(
-              'subjects.errorResponseModalMessage',
+              'modal.errorResponseModalMessage',
               {
                 errorReason: response.data.error.errorCode + ' ' + response.data.error.message
               }
@@ -570,8 +562,8 @@
           this.modalConfirmButtonClass = 'btn-danger';
           $('#responseModal').modal('show');
         } else {
-          this.modalTitle = this.$i18n.t('subjects.successResponseModalTitle');
-          this.modalMessage = this.$i18n.t('subjects.successResponseModalMessage');
+          this.modalTitle = this.$i18n.t('modal.successResponseModalTitle');
+          this.modalMessage = this.$i18n.t('modal.successResponseModalMessage');
           this.modalConfirmButtonClass = 'btn-success';
           $('#responseModal').modal('show');
         }

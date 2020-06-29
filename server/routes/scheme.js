@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const { getAllSchemesAndInfo, getOneScheme } = require('../controllers/SchemeController');
+const { getAllSchemesAndInfo, createScheme, deleteScheme } = require('../controllers/SchemeController');
 
 // base: /scheme
 
@@ -45,17 +45,39 @@ router.get('/all', async function (req, res) {
   }
 });
 
-// GET /scheme get one scheme
-router.get('/', async function (req, res) {
+// POST /scheme create one scheme
+router.post('/', async function (req, res) {
   let result = {};
   try {
     result = await (async function () {
-      const scheme = await getOneScheme({
-        schemeUUID: req.query.schemeUUID,
-      });
+      const createSchemeResponse = await createScheme(
+          {
+            schemeName: req.body.schemeName,
+            decisionStrategy: req.body.decisionStrategy,
+            earlyDropThreshold: req.body.earlyDropThreshold,
+            earlyWinnerThreshold: req.body.earlyWinnerThreshold,
+            clinicalSignificanceThreshold: req.body.clinicalSignificanceThreshold,
+            clinicalSignificanceValue: req.body.clinicalSignificanceValue,
+            constructionMethod: req.body.constructionMethod,
+            adjustmentMethod1: req.body.adjustmentMethod1,
+            adjustmentMethod2: req.body.adjustmentMethod2,
+            adjustmentMethod3: req.body.adjustmentMethod3,
+            burnInBlockNumber: req.body.burnInBlockNumber,
+            burnInBlockLength: req.body.burnInBlockLength,
+            tuningParameterType: req.body.tuningParameterType,
+            tuningParameterValue: req.body.tuningParameterValue,
+            clipMethodMinimumThreshold: req.body.clipMethodMinimumThreshold,
+            armNumber: req.body.armNumber,
+            maximumSampleSize: req.body.maximumSampleSize,
+            adaptiveBlockNumber: req.body.adaptiveBlockNumber,
+            adaptiveBlockLength: req.body.adaptiveBlockLength,
+            betaPriorParameterA: JSON.stringify(req.body.betaPriorParameterA),
+            betaPriorParameterB: JSON.stringify(req.body.betaPriorParameterB),
+          }
+      );
       return {
         statusCode: "1",
-        scheme: scheme,
+        createSchemeResponse: createSchemeResponse,
       };
     }) ();
   } catch (error) {
@@ -63,8 +85,37 @@ router.get('/', async function (req, res) {
     result = {
       statusCode: "0",
       error: {
-        message: `unknown error when get one scheme: ${error}`,
-        errorCode: '0_GETONE_SCHEME',
+        message: `unknown error when create one scheme: ${error}`,
+        errorCode: '0_CREATEONE_SCHEME',
+      },
+    };
+  } finally {
+    res.json(result);
+  }
+});
+
+// DELETE /scheme delete one scheme
+router.delete('/', async function (req, res) {
+  let result = {};
+  try {
+    result = await (async function () {
+      const deleteSchemeResponse = await deleteScheme(
+          {
+            schemeUUID: req.query.schemeUUID,
+          }
+      );
+      return {
+        statusCode: "1",
+        deleteSchemeResponse: deleteSchemeResponse,
+      };
+    }) ();
+  } catch (error) {
+    console.error(error);
+    result = {
+      statusCode: "0",
+      error: {
+        message: `unknown error when delete one scheme: ${error}`,
+        errorCode: '0_DELETEONE_SCHEME',
       },
     };
   } finally {

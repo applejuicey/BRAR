@@ -91,10 +91,15 @@
           <div class="col-lg-4 col-md-6">
             <div class="service-box">
               <div class="service-inner">
-                <router-link :to="{ name: 'type1' }" tag="h4" class="cursor-pointer">
+                <h4 class="cursor-pointer" @click="navigate('custom', {
+                defaultScheme: {
+                    decisionStrategy: 'decisionStrategy1',
+                    constructionMethod: 'constructionMethod2',
+                }
+                })">
                   <i class="far fa-hand-pointer"></i>
                   &nbsp;{{ $t('homepage.method1Title') }}
-                </router-link>
+                </h4>
                 <ul class="text-left homepage-ul text-dark font-weight-light">
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method1BriefIntro1') }}</li>
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method1BriefIntro2') }}</li>
@@ -106,10 +111,15 @@
           <div class="col-lg-4 col-md-6">
             <div class="service-box ">
               <div class="service-inner">
-                <router-link :to="{ name: 'type1' }" tag="h4" class="cursor-pointer">
+                <h4 class="cursor-pointer" @click="navigate('custom', {
+                defaultScheme: {
+                    decisionStrategy: 'decisionStrategy1',
+                    constructionMethod: 'constructionMethod1',
+                }
+                })">
                   <i class="far fa-hand-pointer"></i>
                   &nbsp;{{ $t('homepage.method2Title') }}
-                </router-link>
+                </h4>
                 <ul class="text-left homepage-ul text-dark font-weight-light">
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method2BriefIntro1') }}</li>
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method2BriefIntro2') }}</li>
@@ -121,10 +131,15 @@
           <div class="col-lg-4 col-md-6">
             <div class="service-box">
               <div class="service-inner">
-                <router-link :to="{ name: 'type1' }" tag="h4" class="cursor-pointer">
+                <h4 class="cursor-pointer" @click="navigate('custom', {
+                defaultScheme: {
+                    decisionStrategy: 'decisionStrategy1',
+                    constructionMethod: 'constructionMethod4',
+                }
+                })">
                   <i class="far fa-hand-pointer"></i>
                   &nbsp;{{ $t('homepage.method3Title') }}
-                </router-link>
+                </h4>
                 <ul class="text-left homepage-ul text-dark font-weight-light">
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method3BriefIntro1') }}</li>
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method3BriefIntro2') }}</li>
@@ -136,10 +151,15 @@
           <div class="col-lg-12 col-md-6">
             <div class="service-box">
               <div class="service-inner">
-                <router-link :to="{ name: 'custom' }" tag="h4" class="cursor-pointer">
-                  <i class="far fa-hand-point-right"></i>
+                <h4 class="cursor-pointer" @click="navigate('custom', {
+                defaultScheme: {
+                    decisionStrategy: 'decisionStrategy1',
+                    constructionMethod: 'constructionMethod2',
+                }
+                })">
+                  <i class="far fa-hand-pointer"></i>
                   &nbsp;{{ $t('homepage.method4Title') }}
-                </router-link>
+                </h4>
                 <div class="text-left text-dark font-weight-light">{{ $t('homepage.method4BriefIntro1') }}</div>
                 <ul class="text-left homepage-ul text-dark font-weight-light">
                   <li><i class="fas fa-caret-right"></i>&nbsp;{{ $t('homepage.method4BriefIntro2') }}</li>
@@ -185,7 +205,13 @@
         } else {
           navbar.classList.remove("bg-dark");
         }
-      }
+      },
+      navigate: function (routerName, params) {
+        this.$router.push({
+          name: routerName,
+          params: params,
+        });
+      },
     },
   }
 </script>
