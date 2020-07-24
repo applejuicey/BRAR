@@ -153,6 +153,13 @@
     "unmaskSubjectModalTitle": "Unmask This Subject?",
     "unmaskSubjectModalMessage": "Are you sure to unmask the subject with \"Subject Screening ID {subjectScreeningID}\"?",
     "editSubjectModalTitle": "Edit This Subject?",
+    "showHistoryModalTitle": "Edit History of This Subject?",
+    "notesForUnmask": "Unmasking History",
+    "notesForUnmaskInstruction": "Notes for unmasking",
+    "notesForSpareDrug": "Spare Drug History",
+    "notesForSpareDrugInstruction": "Notes for claiming for spare drug",
+    "otherNotes": "Other Notes",
+    "otherNotesInstruction": "Other notes for this subject",
     "deleteSubjectModalTitle": "Delete This Subject?",
     "deleteSubjectModalMessage": "Are you sure to delete the subject with \"Subject Screening ID {subjectScreeningID}\"?"
   },

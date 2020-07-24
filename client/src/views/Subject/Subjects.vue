@@ -90,6 +90,10 @@
                           data-toggle="tooltip" data-placement="top" :title="$t('subjects.editSubjectModalTitle')">
                       <i class="far fa-edit text-primary"></i>&nbsp;
                     </span>
+                    <span class="cursor-pointer" @click="showHistory(subject.subjectScreeningID)"
+                          data-toggle="tooltip" data-placement="top" :title="$t('subjects.showHistoryModalTitle')">
+                      <i class="fas fa-info-circle text-primary"></i>&nbsp;
+                    </span>
                     <span class="cursor-pointer" @click="deleteSubject(subject.subjectScreeningID)"
                           data-toggle="tooltip" data-placement="top" :title="$t('subjects.deleteSubjectModalTitle')">
                       <i class="far fa-trash-alt text-danger"></i>&nbsp;
@@ -198,6 +202,36 @@
           </div>
         </div>
       </template>
+      <template v-slot:modalBody v-else-if="['history'].includes(modalType)">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 form-group">
+              <label for="notesForUnmask">
+                {{ $t('subjects.notesForUnmask') }}&nbsp;
+                <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('subjects.notesForUnmaskInstruction')"></i>
+              </label>
+              <textarea class="form-control" id="notesForUnmask" rows="5"
+                        :placeholder="$t('subjects.notesForUnmask')" v-model="notesForUnmask"></textarea>
+            </div>
+            <div class="col-12 form-group">
+              <label for="notesForSpareDrug">
+                {{ $t('subjects.notesForSpareDrug') }}&nbsp;
+                <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('subjects.notesForSpareDrugInstruction')"></i>
+              </label>
+              <textarea class="form-control" id="notesForSpareDrug" rows="5"
+                        :placeholder="$t('subjects.notesForSpareDrug')" v-model="notesForSpareDrug"></textarea>
+            </div>
+            <div class="col-12 form-group">
+              <label for="otherNotes">
+                {{ $t('subjects.otherNotes') }}&nbsp;
+                <i class="fas fa-question-circle cursor-pointer" data-toggle="tooltip" data-placement="top" :title="$t('subjects.otherNotesInstruction')"></i>
+              </label>
+              <textarea class="form-control" id="otherNotes" rows="5"
+                        :placeholder="$t('subjects.otherNotes')" v-model="otherNotes"></textarea>
+            </div>
+          </div>
+        </div>
+      </template>
     </modal>
 
     <modal modalID="responseModal" :modalTitle="modalTitle" modalType="response"
@@ -238,6 +272,9 @@
       subjectMedicationMax: null,
       subjectMedicationCurrent: null,
       subjectResponse: null,
+      notesForUnmask: null,
+      notesForSpareDrug: null,
+      otherNotes: null,
       modalID: null,
       modalTitle: null,
       modalType: null,
@@ -409,13 +446,10 @@
         }).then((response) => {
           this.subjectMedicationCurrent = response.data.getOneSubjectResponse.subjectMedicationCurrent;
           this.subjectMedicationMax = response.data.getOneSubjectResponse.subjectMedicationMax;
-          console.log(response.data.getOneSubjectResponse.subjectResponse)
           this.subjectResponse = response.data.getOneSubjectResponse.subjectResponse;
         }).catch((error) =>  {
           console.log(error);
         });
-        // 先获取信息，并向subjectResponse赋值
-        // this.subjectResponse = this.subjectList[parseInt(subjectScreeningID)-1].subjectResponse;
         let initiateModalPromise = new Promise((resolve, reject) => {
           this.modalID = 'editSubjectModal';
           this.modalTitle = this.$i18n.t('subjects.editSubjectModalTitle');
@@ -427,10 +461,36 @@
           resolve();
         });
         initiateModalPromise.then(() => {
-          // let modal = document.getElementById("editSubjectModal");
-          // modal.setAttribute('data-backdrop', 'static');
-          // modal.setAttribute('data-keyboard', 'false');
           $('#editSubjectModal').modal('show');
+        });
+      },
+      showHistory: function (subjectScreeningID) {
+        this.$axios.get('/api/subject', {
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          params: {
+            subjectScreeningID: subjectScreeningID,
+          },
+        }).then((response) => {
+          this.notesForUnmask = response.data.getOneSubjectResponse.notesForUnmask;
+          this.notesForSpareDrug = response.data.getOneSubjectResponse.notesForSpareDrug;
+          this.otherNotes = response.data.getOneSubjectResponse.otherNotes;
+        }).catch((error) =>  {
+          console.log(error);
+        });
+        let initiateModalPromise = new Promise((resolve, reject) => {
+          this.modalID = 'showHistoryModal';
+          this.modalTitle = this.$i18n.t('subjects.showHistoryModalTitle');
+          this.modalType = 'history';
+          this.modalConfirmButtonClass = 'btn-primary';
+          this.customParameters = {
+            subjectScreeningID: subjectScreeningID
+          };
+          resolve();
+        });
+        initiateModalPromise.then(() => {
+          $('#showHistoryModal').modal('show');
         });
       },
       deleteSubject:  function (subjectScreeningID) {
@@ -523,9 +583,23 @@
           case 'edit':
             this.$axios.patch('/api/subject', {
               subjectScreeningID: customParameters.subjectScreeningID,
+              subjectRandomisationStatus: 'edit',
               subjectMedicationMax: this.subjectMedicationMax,
               subjectMedicationCurrent: this.subjectMedicationCurrent,
               subjectResponse: this.subjectResponse,
+            }).then((response) => {
+              this.callResponseModal(response);
+            }).catch((error) => {
+              console.error(error);
+            });
+            break;
+          case 'history':
+            this.$axios.patch('/api/subject', {
+              subjectScreeningID: customParameters.subjectScreeningID,
+              subjectRandomisationStatus: 'history',
+              notesForUnmask: this.notesForUnmask,
+              notesForSpareDrug: this.notesForSpareDrug,
+              otherNotes: this.otherNotes,
             }).then((response) => {
               this.callResponseModal(response);
             }).catch((error) => {

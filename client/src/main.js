@@ -6,6 +6,7 @@ import axios from 'axios';
 import i18n from './locales/index';
 
 axios.defaults.timeout = 10000;
+// 开发环境注释该语句
 axios.defaults.baseURL = 'http://47.100.168.127:4359/';
 Vue.prototype.$axios = axios;
 

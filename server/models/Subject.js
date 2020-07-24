@@ -93,6 +93,19 @@ Subject.init({
       },
     },
   },
+  notesForUnmask: {
+    type: Sequelize.TEXT,
+    allowNull: true,
+  },
+  notesForSpareDrug: {
+    type: Sequelize.TEXT,
+    allowNull: true,
+  },
+  otherNotes: {
+    type: Sequelize.TEXT,
+    allowNull: true,
+  },
+
 }, {
   sequelize,
   modelName: 'subject',

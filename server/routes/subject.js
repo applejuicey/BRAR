@@ -111,6 +111,9 @@ router.patch('/', async function (req, res) {
             subjectMedicationMax: req.body.subjectMedicationMax,
             subjectMedicationCurrent: req.body.subjectMedicationCurrent,
             subjectResponse: req.body.subjectResponse,
+            notesForUnmask: req.body.notesForUnmask,
+            notesForSpareDrug: req.body.notesForSpareDrug,
+            otherNotes: req.body.otherNotes,
           }
       );
       return {

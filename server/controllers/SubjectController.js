@@ -226,7 +226,7 @@ const patchSubject = async function(where, newSubjectInformation) {
             },
           });
       break;
-    default:
+    case "edit":
       return Subject.update(
           {
             subjectMedicationMax: newSubjectInformation.subjectMedicationMax,
@@ -238,6 +238,20 @@ const patchSubject = async function(where, newSubjectInformation) {
               subjectScreeningID: where.subjectScreeningID,
             },
           });
+      break;
+    case "history":
+      return Subject.update(
+          {
+            notesForUnmask: newSubjectInformation.notesForUnmask,
+            notesForSpareDrug: newSubjectInformation.notesForSpareDrug,
+            otherNotes: newSubjectInformation.otherNotes,
+          },
+          {
+            where: {
+              subjectScreeningID: where.subjectScreeningID,
+            },
+          });
+      break;
   }
 };
 
@@ -245,7 +259,14 @@ const patchSubject = async function(where, newSubjectInformation) {
 const getOneSubject = async function(where) {
   return Subject.findOne({
     where: where,
-    attributes: ['subjectMedicationMax', 'subjectMedicationCurrent', 'subjectResponse'],
+    attributes: [
+      'subjectMedicationMax',
+      'subjectMedicationCurrent',
+      'subjectResponse',
+      'notesForUnmask',
+      'notesForSpareDrug',
+      'otherNotes',
+    ],
   });
 };
 

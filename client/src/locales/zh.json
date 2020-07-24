@@ -153,6 +153,13 @@
     "unmaskSubjectModalTitle": "受试者紧急揭盲",
     "unmaskSubjectModalMessage": "您是否确认为筛检编号为“{subjectScreeningID}”的受试者紧急破盲并获取其实际分组情况？",
     "editSubjectModalTitle": "受试者响应信息更新",
+    "showHistoryModalTitle": "受试者状态变更历史",
+    "notesForUnmask": "揭盲历史记录",
+    "notesForUnmaskInstruction": "请按“原因+操作人+日期”的格式填写该受试者揭盲历史记录",
+    "notesForSpareDrug": "备用药物启用历史记录",
+    "notesForSpareDrugInstruction": "请按“原因+操作人+日期”的格式填写该受试者备用药物启用历史记录",
+    "otherNotes": "备注",
+    "otherNotesInstruction": "您可以在这里填写关于该受试者的其他详细备注",
     "deleteSubjectModalTitle": "删除受试者",
     "deleteSubjectModalMessage": "您是否确认删除筛检编号为“{subjectScreeningID}”的受试者？"
   },

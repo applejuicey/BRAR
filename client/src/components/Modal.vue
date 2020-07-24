@@ -2,7 +2,7 @@
   <div>
 
     <div class="modal fade" data-backdrop="static" data-keyboard="false" :id="modalID" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">
